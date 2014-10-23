@@ -1,0 +1,38 @@
+{% extends 'pingapp/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+
+{% block head_css %}
+  <link href='{% static 'pingapp/homepage.css' %}' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block content %}
+  <div id="intro" class="row">
+    <div class="column medium-12">
+      <h3>ping@me</h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="formbox column medium-6">
+      <span>sign in</span>
+    </div>
+    <div class="formbox column medium-6">
+      <span>register here</span>
+      <div class="formcontainer">
+      	<form name="register" action="{% url 'homepage' %}" method="post">
+      		{% csrf_token %}
+        	<label for="id_username">username: </label> 
+        	{{ registerform.username }}
+        	<label for="id_password">password: </label> 
+        	{{ registerform.password }}
+        	<label for="id_email">email: </label> 
+        	{{ registerform.email }}
+        	<input type="submit" value="register" class="tiny button"></input>
+    	</form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

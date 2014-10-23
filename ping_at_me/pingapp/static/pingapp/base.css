@@ -1,0 +1,25 @@
+body {
+	background-color: #F5006B;
+	color: white;
+
+	font-family: 'Montserrat', sans-serif;
+}
+
+/* Override Foundation's coloring */
+h1, h2, h3, h4, h5, h6, label, .button {
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+}
+
+#footer {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+
+	width: 100%;
+	padding: 0.5em;
+
+	text-align: center;
+
+	background-color: black;
+}

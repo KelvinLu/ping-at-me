@@ -1,0 +1,29 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ping@me | {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="//cdn.foundation5.zurb.com/foundation.css">
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='{% static 'pingapp/base.css' %}' rel='stylesheet' type='text/css'>
+    {% block head_css %}{% endblock %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+
+    <div id="footer">
+      <span>Footer Content</span>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.4.6/js/foundation.min.js"></script>
+    {% block body_js %}{% endblock %}
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>
