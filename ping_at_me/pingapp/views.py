@@ -4,8 +4,11 @@ from django.views.generic import View
 
 from pingapp import forms, users
 
+# TODO: Write AJAX endpoints for authentication, registration
+# TODO: Write AJAX endpoints for single page web app
+
 # Create your views here.
-class homepage(View):
+class Homepage(View):
 	def get(self, request):
 		context = {
 			'authform': forms.AuthForm(),
@@ -13,7 +16,7 @@ class homepage(View):
 		}
 		return render(request, 'pingapp/homepage.html', context)
 
-class register(View):
+class Register(View):
 	def post(self, request):
 		registerform = forms.RegisterForm(request.POST)
 
@@ -25,7 +28,7 @@ class register(View):
 
 			newuser = users.register(username, email, password)
 
-			return HttpResponse('Registered!')
+			return redirect('pingpanel')
 
 		context = {
 			'authform': forms.AuthForm(),
@@ -34,7 +37,7 @@ class register(View):
 
 		return render(request, 'pingapp/homepage.html', context)
 
-class authenticate(View):
+class Authenticate(View):
 	def post(self, request):
 		authform = forms.AuthForm(request.POST)
 
@@ -43,7 +46,7 @@ class authenticate(View):
 			password = authform.cleaned_data['password']
 
 			if users.user_auth(request, username, password):
-				return HttpResponse('Logged in!')
+				return redirect('pingpanel')
 
 		context = {
 			'authform': authform,
@@ -53,3 +56,21 @@ class authenticate(View):
 		authform.errorstring = 'Could not log in'
 
 		return render(request, 'pingapp/homepage.html', context)
+
+class Logout(View):
+	def get(self, request):
+		users.user_logout(request)
+
+		return redirect('homepage')
+
+class Pingpanel(View):
+	def get(self, request):
+		user = request.user
+		if not user.is_authenticated():
+			return redirect('homepage')
+
+		context = {
+			'user': user,
+		}
+
+		return render(request, 'pingapp/pingpanel.html', context)

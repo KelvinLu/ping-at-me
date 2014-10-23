@@ -7,7 +7,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'ping_at_me.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^$', views.homepage.as_view(), name = 'homepage'),
-    url(r'^register$', views.register.as_view(), name = 'register'),
-    url(r'^authenticate$', views.authenticate.as_view(), name = 'authenticate'),
+    url(r'^$', views.Homepage.as_view(), name = 'homepage'),
+    url(r'^register$', views.Register.as_view(), name = 'register'),
+    url(r'^authenticate$', views.Authenticate.as_view(), name = 'authenticate'),
+    url(r'^logout$', views.Logout.as_view(), name = 'logout'),
+    url(r'^pingpanel$', views.Pingpanel.as_view(), name = 'pingpanel'),
 )
