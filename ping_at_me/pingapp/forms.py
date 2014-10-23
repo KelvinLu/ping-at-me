@@ -1,9 +1,37 @@
 from django import forms
 
+from pingapp import models
+
 class RegisterForm(forms.Form):
-    username = forms.CharField(label = 'Username', max_length = 30)
-    password = forms.CharField(label = 'Password', max_length = 30, widget = forms.PasswordInput)
-    email = forms.EmailField(label = 'E-Mail')
+    username = forms.CharField(label = 'Username', max_length = 30, required = True)
+    email = forms.EmailField(label = 'E-Mail', required = True)
+    password = forms.CharField(label = 'Password', max_length = 30, required = True, widget = forms.PasswordInput)
+
+    widgets = {
+        'password': forms.PasswordInput(),
+    }
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if models.AppUser.objects.filter(username = username):
+            raise forms.ValidationError('Username already taken')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if models.AppUser.objects.filter(email = email):
+            raise forms.ValidationError('Email already used')
+        return email
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        if len(password) < 6:
+            raise forms.ValidationError('Password is too short')
+        return password
+
+class AuthForm(forms.Form):
+    username = forms.CharField(label = 'Username', max_length = 30, required = True)
+    password = forms.CharField(label = 'Password', max_length = 30, required = True, widget = forms.PasswordInput)
 
     widgets = {
         'password': forms.PasswordInput(),

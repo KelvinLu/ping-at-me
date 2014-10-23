@@ -17,21 +17,36 @@
 
   <div class="row">
     <div class="formbox column medium-6">
-      <span>sign in</span>
+      <span>log in</span>
+      <div class="formcontainer">
+        <form name="signin" action="{% url 'authenticate' %}" method="post">
+          {% csrf_token %}
+          {{ authform }}
+
+          <div>
+            {{ authform.non_field_errors }}
+            {% if authform.errorstring %}<ul class="errorlist"><li>{{ authform.errorstring }}</li></ul>{% endif %}
+          </div>
+
+          <input type="submit" value="log in" class="tiny button"></input>
+        </form>
+      </div>
     </div>
+
     <div class="formbox column medium-6">
       <span>register here</span>
       <div class="formcontainer">
-      	<form name="register" action="{% url 'homepage' %}" method="post">
+      	<form name="register" action="{% url 'register' %}" method="post">
       		{% csrf_token %}
-        	<label for="id_username">username: </label> 
-        	{{ registerform.username }}
-        	<label for="id_password">password: </label> 
-        	{{ registerform.password }}
-        	<label for="id_email">email: </label> 
-        	{{ registerform.email }}
+        	{{ registerform }}
+
+          <div>
+            {{ registerform.non_field_errors }}
+            {% if registerform.errorstring %}<ul class="errorlist"><li>{{ registerform.errorstring }}</li></ul>{% endif %}
+          </div>
+
         	<input type="submit" value="register" class="tiny button"></input>
-    	</form>
+    	  </form>
       </div>
     </div>
   </div>

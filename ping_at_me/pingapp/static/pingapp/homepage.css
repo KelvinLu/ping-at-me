@@ -1,6 +1,6 @@
 .formbox {
 	padding: 1em;
-	text-align: center;
+	text-align: left;
 }
 
 .formcontainer {
@@ -8,4 +8,9 @@
 	margin-top: 2em;
 	padding: 0.5em;
 	background-color: #F52882;
+}
+
+.errorlist {
+	font-size: 0.6em;
+	text-align: left;
 }

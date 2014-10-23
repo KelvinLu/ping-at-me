@@ -8,4 +8,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', views.homepage.as_view(), name = 'homepage'),
+    url(r'^register$', views.register.as_view(), name = 'register'),
+    url(r'^authenticate$', views.authenticate.as_view(), name = 'authenticate'),
 )
