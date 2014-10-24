@@ -52,8 +52,8 @@
         <div class="borderbox">
           <div id="requests">
             {% for request in user.requests.all %}
-              <a class="tiny button expand userbutton" data-dropdown="drop"><i class="fa fa-fw fa-caret-down"></i> {{ request.username }}</a>
-              <ul id="drop" class="tiny f-dropdown" data-dropdown-content>
+              <a class="tiny button expand userbutton" data-dropdown="pendingrequestdrop-id-{{ request.id }}"><i class="fa fa-fw fa-caret-down"></i> {{ request.username }}</a>
+              <ul id="pendingrequestdrop-id-{{ request.id }}" class="tiny f-dropdown" data-dropdown-content>
                 <li><a class="acceptrequest" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-check"></i> accept</a></li>
                 <li><a class="declinerequest" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-times"></i> decline</a></li>
               </ul>  
@@ -67,9 +67,9 @@
         <div class="borderbox">
           <div id="friends">
             {% for friend in user.friends.all %}
-              <a class="tiny button expand userbutton" data-dropdown="drop"><i class="fa fa-fw fa-user"></i> {{ friend.username }}</a>
-              <ul id="drop" class="tiny f-dropdown" data-dropdown-content>
-                <li><a class="ping" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-map-marker"></i> ping</a></li>
+              <a class="tiny button expand userbutton" data-dropdown="frienddrop-id-{{ request.id }}"><i class="fa fa-fw fa-user"></i> {{ friend.username }}</a>
+              <ul id="frienddrop-id-{{ request.id }}" class="tiny f-dropdown" data-dropdown-content>
+                <li><a class="pingfriend" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-map-marker"></i> ping</a></li>
                 <li><a class="removefriend" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-exclamation"></i> remove friend</a></li>
               </ul>  
             {% endfor %}
