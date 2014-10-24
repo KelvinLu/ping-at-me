@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from pingapp import views
+from pingapp import views, ajax
 
 urlpatterns = patterns('',
     # Examples:
@@ -12,4 +12,7 @@ urlpatterns = patterns('',
     url(r'^authenticate$', views.Authenticate.as_view(), name = 'authenticate'),
     url(r'^logout$', views.Logout.as_view(), name = 'logout'),
     url(r'^pingpanel$', views.Pingpanel.as_view(), name = 'pingpanel'),
+
+    url(r'^ajax/searchusers$', ajax.SearchUsers.as_view(), name = 'searchusers'),
+    url(r'^ajax/sendfriendrequest$', ajax.SendFriendRequest.as_view(), name = 'sendfriendrequest'),
 )

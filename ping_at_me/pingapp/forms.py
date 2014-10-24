@@ -3,9 +3,9 @@ from django import forms
 from pingapp import models
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label = 'Username', max_length = 30, required = True)
-    email = forms.EmailField(label = 'E-Mail', required = True)
-    password = forms.CharField(label = 'Password', max_length = 30, required = True, widget = forms.PasswordInput)
+    username = forms.CharField(label = 'username', max_length = 30, required = True)
+    email = forms.EmailField(label = 'email', required = True)
+    password = forms.CharField(label = 'password', max_length = 30, required = True, widget = forms.PasswordInput)
 
     widgets = {
         'password': forms.PasswordInput(),
@@ -30,9 +30,12 @@ class RegisterForm(forms.Form):
         return password
 
 class AuthForm(forms.Form):
-    username = forms.CharField(label = 'Username', max_length = 30, required = True)
-    password = forms.CharField(label = 'Password', max_length = 30, required = True, widget = forms.PasswordInput)
+    username = forms.CharField(label = 'username', max_length = 30, required = True)
+    password = forms.CharField(label = 'password', max_length = 30, required = True, widget = forms.PasswordInput)
 
     widgets = {
         'password': forms.PasswordInput(),
     }
+
+class UsernameForm(forms.Form):
+    username = forms.CharField(label = 'username', max_length = 30, required = True)

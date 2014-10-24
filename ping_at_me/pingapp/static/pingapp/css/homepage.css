@@ -1,16 +1,16 @@
-.formbox {
+div.formbox {
 	padding: 1em;
 	text-align: left;
 }
 
-.formcontainer {
+div.formcontainer {
 	position: relative;
 	margin-top: 2em;
 	padding: 0.5em;
-	background-color: #F52882;
+	background-color: #023652;
 }
 
-.errorlist {
+ul.errorlist {
 	font-size: 0.6em;
 	text-align: left;
 }

@@ -21,14 +21,14 @@ class Register(View):
 		registerform = forms.RegisterForm(request.POST)
 
 		if registerform.is_valid():
-			print registerform	
 			username = registerform.cleaned_data['username']
 			email = registerform.cleaned_data['email']
 			password = registerform.cleaned_data['password']
 
 			newuser = users.register(username, email, password)
 
-			return redirect('pingpanel')
+			if users.user_auth(request, username, password):
+				return redirect('pingpanel')
 
 		context = {
 			'authform': forms.AuthForm(),
@@ -71,6 +71,7 @@ class Pingpanel(View):
 
 		context = {
 			'user': user,
+			'usernameform': forms.UsernameForm(),
 		}
 
 		return render(request, 'pingapp/pingpanel.html', context)

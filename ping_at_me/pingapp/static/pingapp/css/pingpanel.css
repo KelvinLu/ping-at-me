@@ -1,0 +1,17 @@
+div.marginbox {
+	margin-bottom: 0.5em;	
+}
+
+div.borderbox {
+	border-bottom: 4px white solid;
+}
+
+a.button.userbutton {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	text-align: left;
+}
+
+input#id_username {
+	margin-bottom: 0;
+}
