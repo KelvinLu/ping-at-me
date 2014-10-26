@@ -4,12 +4,14 @@ from django.views.generic import View
 
 from pingapp import forms, users
 
-# TODO: Write AJAX endpoints for authentication, registration
 # TODO: Write AJAX endpoints for single page web app
 
 # Create your views here.
 class Homepage(View):
 	def get(self, request):
+		if request.user.is_authenticated():
+			return redirect('pingpanel')
+
 		context = {
 			'authform': forms.AuthForm(),
 			'registerform': forms.RegisterForm(),

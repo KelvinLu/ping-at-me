@@ -2,6 +2,8 @@ from django import forms
 
 from pingapp import models
 
+import re
+
 class RegisterForm(forms.Form):
     username = forms.CharField(label = 'username', max_length = 30, required = True)
     email = forms.EmailField(label = 'email', required = True)
@@ -15,6 +17,8 @@ class RegisterForm(forms.Form):
         username = self.cleaned_data['username']
         if models.AppUser.objects.filter(username = username):
             raise forms.ValidationError('Username already taken')
+        if not re.match(r'\w+$', username):
+            raise forms.ValidationError('Username must only contain letters, numbers, or underscores')
         return username
 
     def clean_email(self):

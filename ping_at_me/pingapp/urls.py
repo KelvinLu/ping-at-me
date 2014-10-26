@@ -15,4 +15,6 @@ urlpatterns = patterns('',
 
     url(r'^ajax/searchusers$', ajax.SearchUsers.as_view(), name = 'searchusers'),
     url(r'^ajax/sendfriendrequest$', ajax.SendFriendRequest.as_view(), name = 'sendfriendrequest'),
+    url(r'^ajax/respondfriendrequest$', ajax.RespondFriendRequest.as_view(), name = 'respondfriendrequest'),
+    url(r'^ajax/removefriend$', ajax.RemoveFriend.as_view(), name = 'removefriend'),
 )

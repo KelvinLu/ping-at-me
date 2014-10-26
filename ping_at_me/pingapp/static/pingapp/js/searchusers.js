@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	$('#searchuserform').submit(function(e) {
+	$('form#searchuserform').submit(function(e) {
 		$.ajax({
 			type: 'POST',
 			url: $('#searchuserform').attr('action'),
@@ -26,7 +26,7 @@ $(document).ready(function () {
 					var thisrequestbutton = this;
 					$.ajax({
 						type: 'POST',
-						url: list.attr('data-add-friend-request-ajax-url'),
+						url: list.attr('data-ajax-url'),
 						data: {'csrfmiddlewaretoken': $(this).attr('data-csrf-token'), 'id': $(this).attr('data-user-id')},
 						success: function(data) {
 							thisrequestbutton.innerHTML = "<i class=\"fa fa-fw fa-check\"></i> friend request sent";
@@ -37,4 +37,32 @@ $(document).ready(function () {
 			list.slideDown(200);
 		});
 	}
+
+	$('a.respondrequest').click(function(e) {
+		var $this = $(this);
+		$.ajax({
+			type: 'POST',
+			url: $(this).attr('data-ajax-url'),
+			data: {'csrfmiddlewaretoken': $(this).attr('data-csrf-token'), 'id': $(this).attr('data-user-id'), 'accept': $(this).attr('data-request-accept')},
+			success: function(data) {
+				$this.parent().parent().prev('a').html("<i class=\"fa fa-fw fa-reply\"></i> responded");
+			},
+		});
+
+		e.preventDefault();
+	});
+
+	$('a.removefriend').click(function(e) {
+		var $this = $(this);
+		$.ajax({
+			type: 'POST',
+			url: $(this).attr('data-ajax-url'),
+			data: {'csrfmiddlewaretoken': $(this).attr('data-csrf-token'), 'id': $(this).attr('data-user-id')},
+			success: function(data) {
+				$this.parent().parent().prev('a').html("<i class=\"fa fa-fw fa-times\"></i> removed");
+			},
+		});
+
+		e.preventDefault();
+	});	
 });

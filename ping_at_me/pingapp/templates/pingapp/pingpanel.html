@@ -40,7 +40,7 @@
                 </div>
               </div>
             </form>
-            <div id="makerequestlist" class="userlist" data-add-friend-request-ajax-url="{% url 'sendfriendrequest' %}" data-csrf-token="{{ csrf_token }}">
+            <div id="makerequestlist" class="userlist" data-ajax-url="{% url 'sendfriendrequest' %}" data-csrf-token="{{ csrf_token }}">
 
             </div>
           </div>
@@ -54,8 +54,8 @@
             {% for request in user.requests.all %}
               <a class="tiny button expand userbutton" data-dropdown="pendingrequestdrop-id-{{ request.id }}"><i class="fa fa-fw fa-caret-down"></i> {{ request.username }}</a>
               <ul id="pendingrequestdrop-id-{{ request.id }}" class="tiny f-dropdown" data-dropdown-content>
-                <li><a class="acceptrequest" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-check"></i> accept</a></li>
-                <li><a class="declinerequest" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-times"></i> decline</a></li>
+                <li><a class="respondrequest" data-ajax-url="{% url 'respondfriendrequest' %}" data-csrf-token="{{ csrf_token }}" data-request-accept="accept" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-check"></i> accept</a></li>
+                <li><a class="respondrequest" data-ajax-url="{% url 'respondfriendrequest' %}" data-csrf-token="{{ csrf_token }}" data-request-accept="reject" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-times"></i> decline</a></li>
               </ul>  
             {% endfor %}
           </div>
@@ -67,10 +67,10 @@
         <div class="borderbox">
           <div id="friends">
             {% for friend in user.friends.all %}
-              <a class="tiny button expand userbutton" data-dropdown="frienddrop-id-{{ request.id }}"><i class="fa fa-fw fa-user"></i> {{ friend.username }}</a>
-              <ul id="frienddrop-id-{{ request.id }}" class="tiny f-dropdown" data-dropdown-content>
-                <li><a class="pingfriend" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-map-marker"></i> ping</a></li>
-                <li><a class="removefriend" data-user-id="{{ request.id }}"><i class="fa fa-fw fa-exclamation"></i> remove friend</a></li>
+              <a class="tiny button expand userbutton" data-dropdown="frienddrop-id-{{ friend.id }}"><i class="fa fa-fw fa-user"></i> {{ friend.username }}</a>
+              <ul id="frienddrop-id-{{ friend.id }}" class="tiny f-dropdown" data-dropdown-content>
+                <li><a class="pingfriend" data-user-id="{{ friend.id }}"><i class="fa fa-fw fa-map-marker"></i> ping</a></li>
+                <li><a class="removefriend" data-ajax-url="{% url 'removefriend' %}" data-csrf-token="{{ csrf_token }}" data-user-id="{{ friend.id }}"><i class="fa fa-fw fa-exclamation"></i> remove friend</a></li>
               </ul>  
             {% endfor %}
           </div>
