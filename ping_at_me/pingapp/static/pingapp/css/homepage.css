@@ -1,16 +1,9 @@
-div.formbox {
-	padding: 1em;
-	text-align: left;
-}
-
-div.formcontainer {
-	position: relative;
-	margin-top: 2em;
-	padding: 0.5em;
-	background-color: #023652;
-}
-
-ul.errorlist {
+small.error {
 	font-size: 0.6em;
-	text-align: left;
+	padding: 0.2em;
+	margin-bottom: 0;
+}
+
+input.ng-dirty.ng-invalid {
+	border: 2px solid #f04124;
 }

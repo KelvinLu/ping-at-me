@@ -36,7 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pingapp'
+    'djangular',
+    'rest_framework',
+    'pingapp',
 )
 
 AUTHENTICATION_BACKENDS = (
