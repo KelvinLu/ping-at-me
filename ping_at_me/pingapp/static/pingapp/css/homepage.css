@@ -1,3 +1,18 @@
+section.fullvertical {
+	height: 100%;
+	padding: 6em;
+}
+
+div#goToBottom {
+	position: absolute;
+	left: 0;
+	bottom: 4em;
+
+	width: 100%;
+
+	text-align: center;
+}
+
 small.error {
 	font-size: 0.6em;
 	padding: 0.2em;
