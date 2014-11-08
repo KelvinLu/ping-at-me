@@ -11,13 +11,23 @@
   <link href='{% static 'pingapp/css/homepage.css' %}' rel='stylesheet' type='text/css'>
 {% endblock %}
 
-{% block content %}
-  <div id="intro" class="row">
-    <div class="column medium-12">
-      <h3>ping@me</h3>
+{% block header %}
+  <div id="headerrow" class="row">
+    <div class="column medium-8">
+      <h4>ping@me</h4>
+    </div>
+    <div id="madeat" class="column medium-4">
+      <h6>
+        <i class="fa fa-heart"></i> 
+        <i class="fa fa-at"></i>
+        <i class="fa fa-map-marker"></i>
+        (38.5371, -121.7547)
+      </h6>
     </div>
   </div>
+{% endblock %}
 
+{% block content %}
   <section class="fullvertical">
     <div class="row">
       <div class="column medium-4 medium-offset-4">

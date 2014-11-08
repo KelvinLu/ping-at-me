@@ -38,6 +38,12 @@ def make_friend_request(user, user_id):
 	except models.AppUser.DoesNotExist:
 		return False
 
+	if user_to_request is user:
+		return False
+
+	if user_to_request in user.friends.all():
+		return False
+
 	user_to_request.requests.add(user)
 	user_to_request.save()
 

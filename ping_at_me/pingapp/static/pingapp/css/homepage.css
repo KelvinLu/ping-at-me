@@ -1,6 +1,10 @@
+div#madeat {
+	text-align: right;
+	opacity: 0.5;
+}
+
 section.fullvertical {
-	height: 100%;
-	padding: 6em;
+	min-height: 100%;
 }
 
 div#goToBottom {

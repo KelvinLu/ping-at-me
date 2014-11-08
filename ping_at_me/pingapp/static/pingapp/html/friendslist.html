@@ -1,0 +1,13 @@
+<div ng-show="friendsListCtrl.serviceData.visible" id="friends-list" class="listings">
+	<div ng-show="friendsListCtrl.serviceData.friends.length">
+		<small><strong>friends</strong></small>
+		<div ng-repeat="friend in friendsListCtrl.serviceData.friends">
+			<small>{$ friend.username $}</small>
+			<a ng-click="friendsListCtrl.removeFriend(friend)" class="option"><i class="fa fa-times"></i></a>
+		</div>
+	</div>
+
+	<div ng-hide="friendsListCtrl.serviceData.friends.length">
+		<small><strong>you have no friends</strong></small>
+	</div>
+</div>

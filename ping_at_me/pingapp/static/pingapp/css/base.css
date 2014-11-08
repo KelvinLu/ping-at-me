@@ -1,4 +1,6 @@
 body {
+	padding-top: 6em;
+
 	background-color: #012235;
 	color: white;
 
@@ -16,15 +18,23 @@ h1, h2, h3, h4, h5, h6, label, .button {
 	margin-bottom: 0;
 }
 
-div#footer {
+div#header {
 	position: fixed;
 	left: 0px;
-	bottom: 0px;
+	top: 0px;
 
 	width: 100%;
-	padding: 0.5em;
-
-	text-align: center;
 
 	background-color: black;
+
+	z-index: 1;
+}
+
+div.header-row {
+	width: 100%;
+	max-width: none;
+}
+
+div#content {
+	height: 100%;
 }

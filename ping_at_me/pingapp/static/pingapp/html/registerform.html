@@ -1,0 +1,21 @@
+<div>
+  <form name="registerForm" novalidate>
+
+    <input class="error" ng-model="registerCtrl.username" name="username" ng-model-options="{ debounce: 500 }" type="text" placeholder="username" ng-minlength="5" ng-maxlength="30" ng-pattern="/^\w+$/" validate-username-available></input>
+    <small class="error" ng-show="registerForm.username.$error.minlength">Username too short.</small>
+    <small class="error" ng-show="registerForm.username.$error.maxlength">Username too long.</small>
+    <small class="error" ng-show="registerForm.username.$error.pattern">Letters, numbers, and underscores only please!</small>
+    <small class="error" ng-show="registerForm.username.$error.usernameAvailable">Username already taken.</small>
+
+    <input class="error" ng-model="registerCtrl.email" ng-model-options="{ debounce: 500 }" name="email" type="email" placeholder="email" validate-email-available></input>
+    <small class="error" ng-show="registerForm.email.$error.email">A valid email is required.</small>
+    <small class="error" ng-show="registerForm.email.$error.emailAvailable">Email already registered.</small>
+
+    <input class="error" ng-model="registerCtrl.password" ng-model-options="{ debounce: 500 }" name="password" type="password" placeholder="password" ng-minlength="6" ng-maxlength="30" validate-password-characters></input>
+    <small class="error" ng-show="registerForm.password.$error.minlength">Password too short.</small>
+    <small class="error" ng-show="registerForm.password.$error.maxlength">Password too long.</small>
+    <small class="error" ng-show="registerForm.password.$error.passwordCharacters">Password must contain a letter and a number.</small>
+
+    <button ng-click="registerCtrl.submit()" class="tiny button expand">start pinging</button>
+  </form>
+</div>

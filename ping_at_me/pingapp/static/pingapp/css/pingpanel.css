@@ -1,0 +1,29 @@
+div#toolbar-container {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+ul#toolbar-buttons {
+	text-align: right;
+}
+
+div.listings {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+
+	width: 100%;
+
+	padding: 1em;
+
+	background-color: black;
+
+	z-index: 1;
+}
+
+a.option {
+	float: right;
+	color: white;
+	margin-left: 0.25em;
+	margin-right: 0.25em;
+}

@@ -1,0 +1,34 @@
+<div ng-show="requestsListCtrl.serviceData.visible" id="requests-list" class="listings">
+	<small><strong>send a friend request</strong></small>
+	<div>
+		<div class="row collapse">
+			<div class="column small-10">
+				<input ng-model="requestsListCtrl.searchQuery" name="searchQuery" type="text" placeholder="search usernames"></input>
+			</div>
+			<div class="column small-2">
+				<a ng-click="requestsListCtrl.searchUsers()" class="button postfix"><i class="fa fa-search"></i></a>
+			</div>
+		</div>
+	</div>
+	<div ng-show="requestsListCtrl.requestMessage">
+		<small><em>{$ requestsListCtrl.requestMessage $}</em></small>
+	</div>
+	<div ng-repeat="user in requestsListCtrl.serviceData.searchResults">
+		<small>{$ user.username $}</small>
+		<a ng-click="requestsListCtrl.sendRequest(user)" class="option"><i class="fa fa-plus"></i></a>
+	</div>
+
+	<br/>
+
+	<div ng-show="requestsListCtrl.serviceData.requests.length">
+		<small><strong>requests</strong></small>
+		<div ng-repeat="request in requestsListCtrl.serviceData.requests">
+			<small>{$ request.username $}</small>
+			<a ng-click="requestsListCtrl.denyRequest(request)" class="option"><i class="fa fa-times"></i></a>
+			<a ng-click="requestsListCtrl.acceptRequest(request)" class="option"><i class="fa fa-check"></i></a>
+		</div>
+	</div>
+	<div ng-hide="requestsListCtrl.serviceData.requests.length">
+		<small><strong>you have no friend requests</strong></small>
+	</div>
+</div>

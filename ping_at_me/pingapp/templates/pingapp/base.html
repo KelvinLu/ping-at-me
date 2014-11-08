@@ -17,15 +17,12 @@
     {% endblock %}
   </head>
   <body>
-    {% block content %}{% endblock %}
+    <div id="header">
+      {% block header %}{% endblock %}
+    </div>
 
-    <div id="footer">
-      <span>
-        <i class="fa fa-heart"></i> 
-        <i class="fa fa-at"></i>
-        <i class="fa fa-map-marker"></i>
-        (38.5371, -121.7547)
-      </span>
+    <div id="content">
+      {% block content %}{% endblock %}
     </div>
 
     {% block body_js %}
