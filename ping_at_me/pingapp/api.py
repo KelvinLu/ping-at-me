@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 import json
 
 from pingapp import models, forms, users, ping, serializers
+from ping_at_me import config
 
 
 
@@ -26,10 +27,14 @@ class AuthLogin(View):
 
 		return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 401)
 
+
+
 class AuthLogout(View):
 	def get(self, request):
 		users.user_logout(request)
 		return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 200)
+
+
 
 class Register(View):
 	def post(self, request):
@@ -47,6 +52,8 @@ class Register(View):
 			return HttpResponse(json.dumps({'success': True}), content_type='application/json', status = 200)
 		else:
 			return HttpResponse(json.dumps({'errors': register_form.errors}), content_type='application/json', status = 400)
+
+
 
 class Availability(View):
 	def get(self, request):
@@ -69,43 +76,67 @@ class Availability(View):
 		return HttpResponse(json.dumps(available), content_type='application/json', status = status)
 
 
-class UserSearchList(generics.ListAPIView):
+
+class UserSearchList(APIView):
 	serializer_class = serializers.AppUserSerializer
 
-	def get_queryset(self):
+	def get(self, request):
+		pagination_count = 5
 		user = self.request.user
 
 		if not user.is_authenticated():
 			raise exceptions.PermissionDenied()
 
 		queryset = models.AppUser.objects.all()
-		username_query = self.request.QUERY_PARAMS.get('q', None)
+		username_query = request.QUERY_PARAMS.get('q', None)
+
+		try:
+			page_number = int(request.QUERY_PARAMS.get('page', 0))
+			if page_number < 0: raise ValueError()
+		except ValueError:
+			raise exceptions.ParseError(detail = 'Search parameter page is not a positive integer.')
 
 		# Checks if username_query is an empty string, too.
 		if not username_query:
 			raise exceptions.ParseError(detail = 'Search parameter q is required.')
 
-		queryset = queryset.exclude(pk = user.pk).exclude(pk__in = [friend.pk for friend in user.friends.all()]).filter(username__icontains = username_query)[:5]
+		queryset = queryset.exclude(pk = user.pk).exclude(pk__in = [friend.pk for friend in user.friends.all()]).filter(username__icontains = username_query)
 
-		return queryset
+		result_count = queryset.count()
+		remaining_count = result_count - ((page_number + 1) * pagination_count)
+		remaining_count = remaining_count if (remaining_count > 0) else 0
+
+		queryset = queryset[page_number * pagination_count:(page_number + 1) * pagination_count]
+
+		return Response({'users': self.serializer_class(queryset, many = True).data, 'remaining_count': remaining_count})
+
+
 
 class FriendSearchList(APIView):
 	serializer_class = serializers.AppUserSerializer
 
 	def get(self, request):
+		pagination_count = 5
 		user = request.user
 
 		if not user.is_authenticated():
 			raise exceptions.NotAuthenticated()
 
 		username_query = request.QUERY_PARAMS.get('q', None)
+		page_number = int(request.QUERY_PARAMS.get('page', 0))
 
-		queryset = user.friends.all()		
+		queryset = user.friends.all()	
 
 		if username_query is not None:
 			queryset = queryset.filter(username__icontains = username_query)
 
-		return Response(self.serializer_class(queryset, many = True).data)
+		result_count = queryset.count()
+		remaining_count = result_count - ((page_number + 1) * pagination_count)
+		remaining_count = remaining_count if (remaining_count > 0) else 0
+
+		queryset = queryset[page_number * pagination_count:(page_number + 1) * pagination_count]
+
+		return Response({'users': self.serializer_class(queryset, many = True).data, 'remaining_count': remaining_count})
 
 	def put(self, request):
 		user = request.user
@@ -131,10 +162,13 @@ class FriendSearchList(APIView):
 
 		return Response({'detail': 'Action not accepted.'}, status = 400)			
 
+
+
 class RequestSearchList(APIView):
 	serializer_class = serializers.AppUserSerializer
 
 	def get(self, request):
+		pagination_count = 5
 		user = request.user
 
 		if not user.is_authenticated():
@@ -142,12 +176,24 @@ class RequestSearchList(APIView):
 
 		username_query = request.QUERY_PARAMS.get('q', None)
 
+		try:
+			page_number = int(request.QUERY_PARAMS.get('page', 0))
+			if page_number < 0: raise ValueError()
+		except ValueError:
+			raise exceptions.ParseError(detail = 'Search parameter page is not a positive integer.')
+
 		queryset = user.requests.all()		
 
 		if username_query is not None:
 			queryset = queryset.filter(username__icontains = username_query)
 
-		return Response(self.serializer_class(queryset, many = True).data)
+		result_count = queryset.count()
+		remaining_count = result_count - ((page_number + 1) * pagination_count)
+		remaining_count = remaining_count if (remaining_count > 0) else 0
+
+		queryset = queryset[page_number * pagination_count:(page_number + 1) * pagination_count]
+
+		return Response({'users': self.serializer_class(queryset, many = True).data, 'remaining_count': remaining_count})
 
 	def post(self, request):
 		user = request.user
@@ -195,3 +241,29 @@ class RequestSearchList(APIView):
 			return Response({'detail': 'Action accepted.'}, status = 200)
 
 		return Response({'detail': 'Action not accepted.'}, status = 400)
+
+
+
+class FireBaseUrl(View):
+	def get(self, request):
+		return HttpResponse(json.dumps({'url': config.FIREBASE_URL}), content_type='application/json', status = 200)
+
+
+
+class FireBaseAuth(View):
+	def get(self, request):
+		user = request.user
+		if not user.is_authenticated():
+			return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 401)
+
+		return HttpResponse(json.dumps({'token': ping.get_auth_token(user)}), content_type='application/json', status = 200)
+
+
+
+class PingOutbox(View):
+	def post(self, request):
+		user = request.user_id
+		if not user.is_authenticated():
+			return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 401)
+
+		return HttpResponse(json.dumps({'success': True}), content_type='application/json', status = 200)

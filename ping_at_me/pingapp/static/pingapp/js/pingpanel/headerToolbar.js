@@ -1,5 +1,5 @@
 (function(){
-    var app = angular.module('headerToolbar', []);
+    var app = angular.module('headerToolbar', ['pingClient']);
 
     app.directive('headerToolbar', function(){
         return {
@@ -28,10 +28,11 @@
         };
     });
 
-    app.controller('toolbarController', ['friendsService', 'requestsService', 'logoutService', function(friendsService, requestsService, loginService){
+    app.controller('toolbarController', ['friendsService', 'requestsService', 'logoutService', 'firebaseService', function(friendsService, requestsService, loginService, firebaseService){
         this.logout = function(){
             loginService.logout().
                 success(function(data){
+                    firebaseService.firebaseRef.unauth();
                     window.location.href = '/';
                 }).
                 error(function(data){
@@ -51,24 +52,76 @@
     }]);
 
     app.controller('friendsListController', ['friendsService', function(friendsService){
+        var ctrl = this;
+
         this.serviceData = friendsService.serviceData;
 
+        this.searchQuery = "";
+        this.page = 0;
+
+        this.friendMessage = "";
+
+        this.searchUsers = function(){
+            friendsService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
+        this.prevUsers = function(){
+            ctrl.page = ((ctrl.page > 0) ? ctrl.page - 1 : ctrl.page);
+            friendsService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
+        this.nextUsers = function(){
+            ctrl.page = ((ctrl.serviceData.remainingCount > 0) ? ctrl.page + 1 : ctrl.page);
+            friendsService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
         this.removeFriend = function(friend){
-            friendsService.removeFriend(friend);
+            friendsService.removeFriend(friend).
+                success(function(data){
+                    ctrl.friendMessage = friend.username + " removed from friends";
+
+                    friends = friendsService.serviceData.friends;
+                    if ((index = friends.indexOf(friend)) > -1) friends.splice(index, 1);
+                }).
+                error(function(data){ 
+                    alert("Error removing friend.");
+                });
         }
     }]);
 
     app.controller('requestsListController', ['$scope', 'requestsService', function($scope, requestsService){
+        var ctrl = this;
+
         this.serviceData = requestsService.serviceData;
 
         this.searchQuery = "";
+        this.searchPage = 0;
+        this.requestPage = 0;
 
         this.requestMessage = "";
 
-        var ctrl = this;
-
         this.searchUsers = function(){
-            requestsService.searchUsers(ctrl.searchQuery);
+            requestsService.searchUsers(ctrl.searchQuery, ctrl.searchPage);
+        }
+
+        this.prevSearchUsers = function(){
+            ctrl.searchPage = ((ctrl.searchPage > 0) ? ctrl.searchPage - 1 : ctrl.searchPage);
+            requestsService.searchUsers(ctrl.searchQuery, ctrl.searchPage);
+        }
+
+        this.nextSearchUsers = function(){
+            ctrl.searchPage = ((ctrl.serviceData.searchRemainingCount > 0) ? ctrl.searchPage + 1 : ctrl.searchPage);
+            requestsService.searchUsers(ctrl.searchQuery, ctrl.searchPage);
+        }
+
+        this.prevRequests = function(){
+            ctrl.requestPage = ((ctrl.requestPage > 0) ? ctrl.requestPage - 1 : ctrl.requestPage);
+            requestsService.getRequestsData(ctrl.requestPage);
+        }
+
+        this.nextRequests = function(){
+            ctrl.requestPage = ((ctrl.serviceData.requestsRemainingCount > 0) ? ctrl.requestPage + 1 : ctrl.requestPage);
+            requestsService.getRequestsData(ctrl.requestPage);
         }
 
         this.sendRequest = function(friend){
@@ -85,11 +138,29 @@
         };
 
         this.acceptRequest = function(friend){
-            requestsService.acceptRequest(friend);
+            requestsService.acceptRequest(friend).
+                success(function(data){
+                    ctrl.requestMessage = "friend request accepted for " + friend.username;
+
+                    requests = requestsService.serviceData.requests;
+                    if ((index = requests.indexOf(friend)) > -1) requests.splice(index, 1);
+                }).
+                error(function(data){
+                    alert('Couldn\'t respond to request.');
+                });
         };
 
         this.denyRequest = function(friend){
-            requestsService.denyRequest(friend);
+            requestsService.denyRequest(friend).
+                success(function(data){
+                    ctrl.requestMessage = "friend request denied for " + friend.username;
+
+                    requests = requestsService.serviceData.requests;
+                    if ((index = requests.indexOf(friend)) > -1) requests.splice(index, 1);
+                }).
+                error(function(data){
+                    alert('Couldn\'t respond to request.');
+                });
         };
     }]);
 
@@ -104,16 +175,18 @@
     }]);
 
     app.factory('requestsService', ['$http', function($http){
+        var serv = this;
+
         var serviceData = {
             visible: false,
             requests: [],
+            requestsRemainingCount: null,
             searchResults: [],
+            searchRemainingCount: null,
         };
 
-        var serv = this;
-
         this.toggle = function() {
-            if (visible = !serviceData.visible) serv.getRequestsData();
+            if (visible = !serviceData.visible) serv.getRequestsData(0);
             serviceData.visible = !serviceData.visible;
         };
 
@@ -121,12 +194,13 @@
             serviceData.visible = false;            
         };
 
-        this.searchUsers = function(query){
+        this.searchUsers = function(query, page){
             $http.get('/api/users/search', {
-                params: {q: query},
+                params: {q: query, page: page},
             }).
                 success(function(data){
-                    serviceData.searchResults = data;
+                    serviceData.searchResults = data.users;
+                    serviceData.searchRemainingCount = data.remaining_count;
                 }).
                 error(function(data){
                     alert('Couldn\'t search!');
@@ -140,10 +214,13 @@
             });
         };
 
-        this.getRequestsData = function(){
-            $http.get('/api/users/self/requests').
+        this.getRequestsData = function(page){
+            $http.get('/api/users/self/requests', {
+                params: {page: page},
+            }).
                 success(function(data){
-                    serviceData.requests = data;
+                    serviceData.requests = data.users;
+                    serviceData.requestsRemainingCount = data.remaining_count;
                 }).
                 error(function(data){
                     alert('Couldn\'t load your requests!');
@@ -151,11 +228,17 @@
         };
 
         this.acceptRequest = function(friend){
-
+            return $http.put('/api/users/self/requests', {
+                id: friend.id, 
+                action: 'accept',
+            });
         };
 
         this.denyRequest = function(friend){
-
+            return $http.put('/api/users/self/requests', {
+                id: friend.id, 
+                action: 'deny',
+            });
         };
 
         return {
@@ -171,15 +254,15 @@
     }]);
 
     app.factory('friendsService', ['$http', function($http){
+        var serv = this;
+
         var serviceData = {
             visible: false,
             friends: [],
         };
 
-        var serv = this;
-
         this.toggle = function() {
-            if (visible = !serviceData.visible) serv.getFriendsData();
+            if (visible = !serviceData.visible) serv.searchUsers('', 0);
             serviceData.visible = visible;
         }
 
@@ -187,10 +270,12 @@
             serviceData.visible = false;            
         }
 
-        this.getFriendsData = function(){
-            $http.get('/api/users/self/friends').
+        this.searchUsers = function(query, page){
+            $http.get('/api/users/self/friends', {
+                params: {q: query, page: page},
+            }).
                 success(function(data){
-                    serviceData.friends = data;
+                    serviceData.friends = data.users;
                 }).
                 error(function(data){
                     alert('Couldn\'t load your friends!');
@@ -198,14 +283,17 @@
         };
 
         this.removeFriend = function(friend){
-
+            return $http.put('/api/users/self/friends', {
+                id: friend.id, 
+                action: 'remove',
+            });
         };
 
         return {
             serviceData: serviceData,
             toggle: this.toggle,
             hide: this.hide,
-            getFriendsData: this.getFriendsData,
+            searchUsers: this.searchUsers,
             removeFriend: this.removeFriend,
         };
     }]);

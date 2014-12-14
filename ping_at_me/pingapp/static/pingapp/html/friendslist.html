@@ -1,13 +1,36 @@
 <div ng-show="friendsListCtrl.serviceData.visible" id="friends-list" class="listings">
-	<div ng-show="friendsListCtrl.serviceData.friends.length">
-		<small><strong>friends</strong></small>
-		<div ng-repeat="friend in friendsListCtrl.serviceData.friends">
-			<small>{$ friend.username $}</small>
-			<a ng-click="friendsListCtrl.removeFriend(friend)" class="option"><i class="fa fa-times"></i></a>
-		</div>
-	</div>
+    <div class="border-top-white" ng-show="friendsListCtrl.serviceData.friends.length">
+        <small><strong>friends</strong></small>
+        <div class="row collapse">
+            <div class="column small-10">
+                <input ng-model="friendsListCtrl.searchQuery" name="searchQuery" type="text" placeholder="search friends"></input>
+            </div>
+            <div class="column small-2">
+                <a ng-click="friendsListCtrl.searchUsers()" class="button postfix"><i class="fa fa-search"></i></a>
+            </div>
+        </div>
 
-	<div ng-hide="friendsListCtrl.serviceData.friends.length">
-		<small><strong>you have no friends</strong></small>
-	</div>
+        <small ng-show="friendsListCtrl.page">
+            <a ng-click="friendsListCtrl.prevUsers()">previous page</a>
+        </small>
+        <br/>
+
+        <div ng-repeat="friend in friendsListCtrl.serviceData.friends | filter:friendsListCtrl.filterObj">
+            <small>{$ friend.username $}</small>
+            <a ng-click="friendsListCtrl.removeFriend(friend)" class="option"><i class="fa fa-times"></i></a>
+        </div>
+
+        <small ng-show="friendsListCtrl.serviceData.remainingCount">
+            <a ng-click="friendsListCtrl.nextUsers()">next page</a><br/>
+            <strong>remaining results: {$ friendsListCtrl.serviceData.remainingCount $}</strong>
+        </small>        
+    </div>
+
+    <div class="border-top-white" ng-hide="friendsListCtrl.serviceData.friends.length">
+        <small><strong>no friends found</strong></small>
+    </div>
+    
+    <div class="border-top-white" ng-show="friendsListCtrl.friendMessage">
+        <small><em>{$ friendsListCtrl.friendMessage $}</em></small>
+    </div>
 </div>

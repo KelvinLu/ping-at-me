@@ -27,3 +27,33 @@ a.option {
 	margin-left: 0.25em;
 	margin-right: 0.25em;
 }
+
+div.border-top-white {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: white;
+	margin-top: 1em;
+}
+
+div.map-container {
+	position: relative;
+	padding-bottom: 75%;
+	height: 0;
+
+
+	margin-bottom: 1px;
+	background-color: black;
+}
+
+div.map {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 1.0;
+}
+
+div.map img {
+	max-width: none;
+}

@@ -11,19 +11,19 @@
 	});
 
 	app.controller('loginController', ['loginService', function(loginService){
+		var ctrl = this;
+
 		this.username = '';
 		this.password = '';
 		this.loginFailed = false;
 
-		var controller = this;
-
 		this.submit = function(){
-			loginService.login(controller.username, controller.password).
+			loginService.login(ctrl.username, ctrl.password).
 				success(function(data){
 					window.location.href = '/pingpanel';
 				}).
                 error(function(data){
-                    controller.loginFailed = true;
+                    ctrl.loginFailed = true;
                 });
 		};
 	}]);

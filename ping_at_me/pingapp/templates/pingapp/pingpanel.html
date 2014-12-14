@@ -7,8 +7,13 @@
 {% block ng-attr %}ng-app="pingpanel"{% endblock %}
 
 {% block head_css %}
-	{{ block.super }}
+    {{ block.super }}
   <link href='{% static 'pingapp/css/pingpanel.css' %}' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block head_js %}
+  {{ block.super }}
+  <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
 {% endblock %}
 
 {% block header %}
@@ -31,11 +36,11 @@
 
 {% block content %}
   <div class="row">
-    <div class="column medium-6">
-      :(
+    <div ng-controller="pingInboxController as pingInboxCtrl" class="column medium-8">
+      <span></span>
     </div>
-    <div class="column medium-6">
-      :)
+    <div class="column medium-4">
+      <ping-outbox></ping-outbox>
     </div>
   </div>
 {% endblock %}
@@ -44,4 +49,5 @@
   {{ block.super }}
   <script src='{% static 'pingapp/js/pingpanel/pingpanel.js' %}'></script>
   <script src='{% static 'pingapp/js/pingpanel/headerToolbar.js' %}'></script>
+  <script src='{% static 'pingapp/js/pingpanel/pingClient.js' %}'></script>
 {% endblock %}

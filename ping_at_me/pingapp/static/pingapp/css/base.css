@@ -18,6 +18,11 @@ h1, h2, h3, h4, h5, h6, label, .button {
 	margin-bottom: 0;
 }
 
+div.header-row {
+	width: 100%;
+	max-width: none;
+}
+
 div#header {
 	position: fixed;
 	left: 0px;
@@ -28,11 +33,6 @@ div#header {
 	background-color: black;
 
 	z-index: 1;
-}
-
-div.header-row {
-	width: 100%;
-	max-width: none;
 }
 
 div#content {

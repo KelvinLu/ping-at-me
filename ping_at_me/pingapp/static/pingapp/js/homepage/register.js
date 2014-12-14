@@ -11,14 +11,14 @@
     });
 
     app.controller('registerController', ['registerService' ,function(registerService){
+        var ctrl = this;
+
         this.username = '';
         this.email = '';
         this.password = '';
 
-        var controller = this;
-
         this.submit = function(){
-            registerService.register(controller.username, controller.email, controller.password).
+            registerService.register(ctrl.username, ctrl.email, ctrl.password).
                 success(function(data){
                     window.location.href = '/pingpanel';
                 });

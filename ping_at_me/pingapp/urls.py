@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from pingapp import views, api
+from pingapp import views, api, ping
 
 
 
@@ -24,10 +24,21 @@ api_register = patterns('',
     url(r'$', api.Register.as_view(), name = 'api-register'),
 )
 
+api_firebase = patterns('',
+    url(r'/url$', api.FireBaseUrl.as_view(), name = 'api-firebaseurl'),
+    url(r'/auth$', api.FireBaseAuth.as_view(), name = 'api-firebaseauth'),
+)
+
+api_ping = patterns('',
+    url(r'/firebase', include(api_firebase)),
+    url(r'/outbox$', api.PingOutbox.as_view(), name = 'api-pingoutbox'),
+)
+
 api_urls = patterns('',
     url(r'/auth', include(api_auth)),
     url(r'/users', include(api_users)),
     url(r'/register', include(api_register)),
+    url(r'/ping', include(api_ping)),
 )
 
 urlpatterns = patterns('',

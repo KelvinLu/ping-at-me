@@ -1,0 +1,25 @@
+<div>
+  <span>ping outbox</span>
+
+  <div class="map-container">
+    <div id="currentLocationMap" class="map" ng-init="pingOutboxCtrl.updateLocation()"></div>
+  </div>
+  <button class="tiny button" ng-click="pingOutboxCtrl.updateLocation()">update location</button>
+
+  <div>
+    <form name="recipientForm">
+      <small><strong>recipients</strong></small>
+      <input ng-model="pingOutboxCtrl.searchQuery" name="message" type="text" placeholder="search friends"></input>
+    </form>
+  </div>
+
+  <div>
+    <form name="messageForm">
+      <small><strong>send a message with your ping</strong></small>
+      <input ng-model="pingOutboxCtrl.outboxData.message" ng-maxlength="140" name="message" type="text" placeholder="message"></input>
+      <small class="error" ng-show="messageForm.message.$error.maxlength">Message too long.</small>
+    </form>
+  </div>
+
+  <button class="tiny button" ng-click="pingOutboxCtrl.sendPing()">send ping</button>
+</div>
