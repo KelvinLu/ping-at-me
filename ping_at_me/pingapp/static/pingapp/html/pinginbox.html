@@ -6,7 +6,7 @@
         <div class="column small-6">
           <div class="double-list-column">
             <div class="map-container">
-              <div id="pingInboxLocationMap" class="map" ng-init="pingInboxCtrl.initMap()"></div>
+              <div ng-init="pingInboxCtrl.initMap()" id="pingInboxLocationMap" class="map"></div>
             </div>
           </div>
         </div>
@@ -23,10 +23,20 @@
   </div>
 
   <div class="subsection">
-    <div ng-repeat="ping in pingInboxCtrl.serviceData.inbox.slice().reverse()" ng-click="pingInboxCtrl.selectPing(ping)" class="pingCard">
-      <small>{$ ping.timestamp * 1000 | date:'medium' $}</small></br>
-      <small>{$ ping.sender.username $}</small>
-      <small ng-show="ping.message"><i class="fa fa-fw fa-comment"></i></small>
+    <div id="pingCardContainer">
+      <div ng-repeat="ping in pingInboxCtrl.inboxData.inbox.slice().reverse()" class="pingCardWrapper">
+        <div class="pingCard">
+          <div ng-click="pingInboxCtrl.selectPing(ping)">
+            <small>{$ ping.timestamp * 1000 | date:'medium' $}</small></br>
+            <small>{$ ping.sender.username $}</small>
+            <small ng-show="ping.message"><i class="fa fa-fw fa-comment"></i></small>
+          </div>
+          <div>
+            <a ng-click="pingInboxCtrl.replyPing(ping)"><i class="fa fa-fw fa-reply"></i></a>
+            <a ng-click="pingInboxCtrl.deletePing(ping)" class="option"><i class="fa fa-fw fa-trash"></i></a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -19,14 +19,16 @@
         };
     });
 
-    app.controller('pingInboxController', ['pingInbox', function(pingInbox){
+    app.controller('pingInboxController', ['pingInbox', 'pingOutbox', function(pingInbox, pingOutbox){
         var ctrl = this;
 
-        this.serviceData = pingInbox.serviceData;
+        this.inboxData = pingInbox.inboxData;
 
         this.selectedPing = null;
 
         this.gmap = null;
+
+        ctrl.msnry = null;
 
         this.initMap = function(){
             ctrl.gmap = new GMaps({
@@ -45,6 +47,14 @@
             ctrl.changeLocation(ping.longitude, ping.latitude);
         };
 
+        this.deletePing = function(ping){
+            pingInbox.deletePing(ping);
+        };
+
+        this.replyPing = function(ping){
+            pingOutbox.addRecipient(ping.sender);
+        };
+
         this.changeLocation = function(longitude, latitude){
             ctrl.gmap.removeMarkers();
             ctrl.gmap.setCenter(latitude, longitude);
@@ -58,19 +68,13 @@
     app.controller('pingOutboxController', ['pingOutbox', 'friendsSearchService', 'locatorService', function(pingOutbox, friendsSearchService, locatorService){
         var ctrl = this;
 
-        this.outboxData = {
-            longitude: null,
-            latitude: null,
-            message: '',
-            recipients: [],
-        };
-
         this.pending = false;
 
         this.sendPingMessage = null;
         this.sendPingSuccess = null;
 
         this.friendsSearchServiceData = friendsSearchService.serviceData;
+        this.outboxData = pingOutbox.outboxData;
 
         this.searchQuery = '';
         this.page = 0;
@@ -92,19 +96,18 @@
         }
 
         this.addRecipient = function(friend){
-            if (ctrl.outboxData.recipients.indexOf(friend) == -1) ctrl.outboxData.recipients.push(friend);
+            pingOutbox.addRecipient(friend);
         }
 
         this.removeRecipient = function(friend){
-            recipients = ctrl.outboxData.recipients;
-            if ((index = recipients.indexOf(friend)) > -1) recipients.splice(index, 1);
+            pingOutbox.removeRecipient(friend);
         }
 
         this.displayLocation = function(){
             ctrl.gmap = new GMaps({
                 div: '#currentLocationMap',
-                lng: ctrl.outboxData.longitude,
-                lat: ctrl.outboxData.latitude,
+                lng: pingOutbox.outboxData.longitude,
+                lat: pingOutbox.outboxData.latitude,
                 disableDefaultUI: true,
                 zoomControl: true,
                 panControl: true,
@@ -112,15 +115,15 @@
             });
 
             ctrl.gmap.addMarker({
-                lng: ctrl.outboxData.longitude,
-                lat: ctrl.outboxData.latitude,
+                lng: pingOutbox.outboxData.longitude,
+                lat: pingOutbox.outboxData.latitude,
             });
         };
 
         this.updateLocation = function(){
             locatorService.updateLocation(function(position){
-                ctrl.outboxData.longitude = position.coords.longitude;
-                ctrl.outboxData.latitude = position.coords.latitude;
+                pingOutbox.outboxData.longitude = position.coords.longitude;
+                pingOutbox.outboxData.latitude = position.coords.latitude;
                 ctrl.displayLocation();
             }, function(error){
                 alert('Could not get geolocation');
@@ -128,17 +131,17 @@
         };
 
         this.checkValid = function(){
-            return (ctrl.outboxData.longitude !== null) && (ctrl.outboxData.latitude !== null) && (ctrl.outboxData.recipients.length) && (!ctrl.pending);
+            return (pingOutbox.outboxData.longitude !== null) && (pingOutbox.outboxData.latitude !== null) && (pingOutbox.outboxData.recipients.length) && (!ctrl.pending);
         };
 
         this.sendPing = function(){
             if (ctrl.checkValid()) {
                 ctrl.pending = true;
                 ctrl.sendPingSuccess = null;
-                pingOutbox.sendPing(ctrl.outboxData).
+                pingOutbox.sendPing(pingOutbox.outboxData).
                     success(function(data){
-                        ctrl.outboxData.message = '';
-                        ctrl.outboxData.recipients = [];
+                        pingOutbox.outboxData.message = '';
+                        pingOutbox.outboxData.recipients = [];
                         ctrl.pending = false;
                         ctrl.sendPingMessage = "ping sent!";
                         ctrl.sendPingSuccess = true;
@@ -171,6 +174,22 @@
     app.factory('pingOutbox', ['$http', function($http){
         var serv = this;
 
+        this.outboxData = {
+            longitude: null,
+            latitude: null,
+            message: '',
+            recipients: [],
+        };
+
+        this.addRecipient = function(friend){
+            if (serv.outboxData.recipients.indexOf(friend) == -1) serv.outboxData.recipients.push(friend);
+        }
+
+        this.removeRecipient = function(friend){
+            recipients = serv.outboxData.recipients;
+            if ((index = recipients.indexOf(friend)) > -1) recipients.splice(index, 1);
+        }
+
         this.sendPing = function(outboxData) {
             return $http.post('/api/ping/outbox', {
                 longitude: outboxData.longitude,
@@ -181,6 +200,9 @@
         };
 
         return {
+            outboxData: this.outboxData,
+            addRecipient: this.addRecipient,
+            removeRecipient: this.removeRecipient,
             sendPing: this.sendPing,
         };
     }]);
@@ -188,17 +210,22 @@
     app.factory('pingInbox', ['$firebase', 'firebaseService', function($firebase, firebaseService){
         var serv = this;
 
-        this.serviceData = {
+        this.inboxData = {
             inbox: [],
         };
 
         firebaseService.initPromise.then(function(){            
             inboxRefSync = $firebase(firebaseService.firebaseRef.child('pingInbox/' + firebaseService.userId.toString()));
-            serv.serviceData.inbox = inboxRefSync.$asArray();
+            serv.inboxData.inbox = inboxRefSync.$asArray();
         });
 
+        this.deletePing = function(ping) {
+            serv.inboxData.inbox.$remove(ping);
+        }
+
         return {
-            serviceData: this.serviceData,
+            inboxData: this.inboxData,
+            deletePing: this.deletePing,
         };
     }]);
 

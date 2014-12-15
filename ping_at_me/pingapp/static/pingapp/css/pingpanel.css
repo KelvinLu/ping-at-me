@@ -32,7 +32,6 @@ div.listings {
 
 a.option {
 	float: right;
-	color: white;
 	margin-left: 0.25em;
 	margin-right: 0.25em;
 }
@@ -68,8 +67,8 @@ div.map img {
 }
 
 div.double-list-column {
-	padding-left: 0.2em;
-	padding-right: 0.2em;
+	margin-left: 0.2em;
+	margin-right: 0.2em;
 }
 
 div.name-tag {
@@ -90,4 +89,16 @@ div.subsection {
 
 .invisible {
 	opacity: 0;
+}
+
+div.pingCardWrapper {
+	display: inline-block;
+	width: 33.33%;
+	padding: 0.2em;
+}
+
+div.pingCard {
+	background-color: #175275;
+	padding: 0.2em;
+	width: 100%;
 }
