@@ -13,7 +13,6 @@
 
 {% block head_js %}
   {{ block.super }}
-  <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
 {% endblock %}
 
 {% block header %}
@@ -37,7 +36,7 @@
 {% block content %}
   <div class="row">
     <div ng-controller="pingInboxController as pingInboxCtrl" class="column medium-8">
-      <span></span>
+      <ping-inbox></ping-inbox>
     </div>
     <div class="column medium-4">
       <ping-outbox></ping-outbox>
@@ -47,6 +46,8 @@
 
 {% block body_js %}
   {{ block.super }}
+  <script src='https://cdn.firebase.com/js/client/1.1.1/firebase.js'></script>
+  <script src="https://cdn.firebase.com/libs/angularfire/0.9.0/angularfire.min.js"></script>
   <script src='{% static 'pingapp/js/pingpanel/pingpanel.js' %}'></script>
   <script src='{% static 'pingapp/js/pingpanel/headerToolbar.js' %}'></script>
   <script src='{% static 'pingapp/js/pingpanel/pingClient.js' %}'></script>

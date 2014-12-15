@@ -1,0 +1,32 @@
+<div class="full-section no-highlight">
+  <span>ping inbox</span>
+
+  <div class="subsection" ng-class="{invisible: pingInboxCtrl.selectedPing == null}">
+    <div class="row collapse">
+        <div class="column small-6">
+          <div class="double-list-column">
+            <div class="map-container">
+              <div id="pingInboxLocationMap" class="map" ng-init="pingInboxCtrl.initMap()"></div>
+            </div>
+          </div>
+        </div>
+        <div class="column small-6">
+          <div class="double-list-column">
+            <strong>{$ pingInboxCtrl.selectedPing.timestamp * 1000 | date:'medium' $}</strong></br>
+            <strong>{$ pingInboxCtrl.selectedPing.sender.username $}</strong></br>
+            <div ng-show="pingInboxCtrl.selectedPing.message">
+              <span>{$ pingInboxCtrl.selectedPing.message $}</span>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div ng-repeat="ping in pingInboxCtrl.serviceData.inbox.slice().reverse()" ng-click="pingInboxCtrl.selectPing(ping)" class="pingCard">
+      <small>{$ ping.timestamp * 1000 | date:'medium' $}</small></br>
+      <small>{$ ping.sender.username $}</small>
+      <small ng-show="ping.message"><i class="fa fa-fw fa-comment"></i></small>
+    </div>
+  </div>
+</div>

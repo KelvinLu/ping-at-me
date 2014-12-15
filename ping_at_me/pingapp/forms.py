@@ -7,7 +7,7 @@ import re
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label = 'username', max_length = 30, required = True)
+    username = forms.CharField(label = 'username', max_length = 18, required = True)
     email = forms.EmailField(label = 'email', required = True)
     password = forms.CharField(label = 'password', max_length = 30, required = True)
 

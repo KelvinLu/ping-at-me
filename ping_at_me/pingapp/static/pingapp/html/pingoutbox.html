@@ -1,25 +1,88 @@
-<div>
+<div class="full-section no-highlight">
   <span>ping outbox</span>
-
-  <div class="map-container">
-    <div id="currentLocationMap" class="map" ng-init="pingOutboxCtrl.updateLocation()"></div>
+  <div class="subsection">
+    <small><strong>your location</strong></small>
+    <div class="map-container">
+      <div id="currentLocationMap" class="map" ng-init="pingOutboxCtrl.updateLocation()"></div>
+    </div>
+    <button class="tiny button" ng-click="pingOutboxCtrl.updateLocation()">update location</button>
   </div>
-  <button class="tiny button" ng-click="pingOutboxCtrl.updateLocation()">update location</button>
 
-  <div>
+  <div class="subsection">
     <form name="recipientForm">
-      <small><strong>recipients</strong></small>
-      <input ng-model="pingOutboxCtrl.searchQuery" name="message" type="text" placeholder="search friends"></input>
+      <small><strong>add recipients</strong></small>
+      <div class="row collapse">
+          <div class="column small-10">
+              <input ng-model="pingOutboxCtrl.searchQuery" name="searchQuery" type="text" placeholder="search friends"></input>
+          </div>
+          <div class="column small-2">
+              <a ng-click="pingOutboxCtrl.searchUsers()" class="button postfix"><i class="fa fa-search"></i></a>
+          </div>
+      </div>
     </form>
+
+    <div class="row collapse">
+      <div class="column small-6">
+        <div class="double-list-column">
+          <small>
+            <strong>search results</strong>
+          </small>
+          <div ng-show="pingOutboxCtrl.friendsSearchServiceData.searchResults.length">
+            <small ng-show="pingOutboxCtrl.page">
+                <a ng-click="pingOutboxCtrl.prevUsers()">previous page</a>
+            </small>
+            <br/>
+
+            <div ng-repeat="friend in pingOutboxCtrl.friendsSearchServiceData.searchResults" class="name-tag">
+                <small>{$ friend.username $}</small>
+                <a ng-click="pingOutboxCtrl.addRecipient(friend)" class="option"><i class="fa fa-arrow-right"></i></a>
+            </div>
+
+            <small ng-show="pingOutboxCtrl.friendsSearchServiceData.remainingCount">
+                <a ng-click="pingOutboxCtrl.nextUsers()">next page</a><br/>
+                <strong>remaining results: {$ pingOutboxCtrl.serviceData.remainingCount $}</strong>
+            </small>
+          </div>
+
+          <div ng-hide="pingOutboxCtrl.friendsSearchServiceData.searchResults.length">
+            <br/><small>no results found</small>
+          </div>
+        </div>
+      </div>
+      
+      <div class="column small-6">
+        <div class="double-list-column">
+          <small>
+              <strong>recipients</strong>
+          </small>
+          <div ng-show="pingOutboxCtrl.outboxData.recipients.length">
+            <br/>
+            <div ng-repeat="friend in pingOutboxCtrl.outboxData.recipients" class="name-tag">
+                <small>{$ friend.username $}</small>
+                <a ng-click="pingOutboxCtrl.removeRecipient(friend)" class="option"><i class="fa fa-times"></i></a>
+            </div>
+          </div>
+          <div ng-hide="pingOutboxCtrl.outboxData.recipients.length">
+            <br/><small>no recipients specified</small>
+          </div>        
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
+  <div class="subsection">
     <form name="messageForm">
       <small><strong>send a message with your ping</strong></small>
-      <input ng-model="pingOutboxCtrl.outboxData.message" ng-maxlength="140" name="message" type="text" placeholder="message"></input>
+      <textarea ng-model="pingOutboxCtrl.outboxData.message" ng-maxlength="140" rows="5" name="message" type="text" placeholder="message"></textarea>
       <small class="error" ng-show="messageForm.message.$error.maxlength">Message too long.</small>
     </form>
   </div>
 
-  <button class="tiny button" ng-click="pingOutboxCtrl.sendPing()">send ping</button>
+  <div class="subsection">
+    <button class="tiny button" ng-click="pingOutboxCtrl.sendPing()" ng-class="{disabled: !pingOutboxCtrl.checkValid()}">send ping</button>
+    <i class="fa fa-fw fa-spinner fa-spin" ng-show="pingOutboxCtrl.pending"></i>
+    <i class="fa fa-fw fa-check" ng-show="pingOutboxCtrl.sendPingSuccess !== null && pingOutboxCtrl.sendPingSuccess"></i>
+    <i class="fa fa-fw fa-exclamation" ng-show="pingOutboxCtrl.sendPingSuccess !== null && !pingOutboxCtrl.sendPingSuccess"></i>
+    <small ng-show="pingOutboxCtrl.sendPingSuccess !== null">{$ pingOutboxCtrl.sendPingMessage $}</small>
+  </div>
 </div>

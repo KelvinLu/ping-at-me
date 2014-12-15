@@ -201,8 +201,6 @@ class RequestSearchList(APIView):
 		if not user.is_authenticated():
 			raise exceptions.NotAuthenticated()
 
-		print request.DATA
-
 		user_id = request.DATA.get('id', None)
 		action = request.DATA.get('action', None)
 
@@ -256,14 +254,38 @@ class FireBaseAuth(View):
 		if not user.is_authenticated():
 			return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 401)
 
-		return HttpResponse(json.dumps({'token': ping.get_auth_token(user)}), content_type='application/json', status = 200)
+		return HttpResponse(json.dumps({'token': ping.get_auth_token(user), 'userId': user.id}), content_type='application/json', status = 200)
 
 
 
 class PingOutbox(View):
 	def post(self, request):
-		user = request.user_id
+		user = request.user
 		if not user.is_authenticated():
 			return HttpResponse(json.dumps({'authenticated': False}), content_type='application/json', status = 401)
+
+		pingJSON = json.loads(request.body)
+
+		try:
+			pingData = {}
+			pingData['longitude'] = float(pingJSON.get('longitude', None))
+			pingData['latitude'] = float(pingJSON.get('latitude', None))
+			pingData['message'] = pingJSON.get('message', None)
+			pingData['recipientIds'] = [int(i) for i in (set(pingJSON.get('recipients', None)))]
+		except ValueError:
+			return HttpResponse(json.dumps({'success': False}), content_type='application/json', status = 400)
+
+		ping.send_ping(user, pingData)
+
+		return HttpResponse(json.dumps({'success': True}), content_type='application/json', status = 200)
+
+	def get(self, request):
+		user = request.user
+		ping.send_ping(user, {
+			'longitude': -122.040237,
+			'latitude': 37.529659,
+			'message': 'get request to api',
+			'recipientIds': [23],
+		})
 
 		return HttpResponse(json.dumps({'success': True}), content_type='application/json', status = 200)

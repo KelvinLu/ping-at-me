@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 
-from pingapp import models
+from pingapp import models, ping
 
 def user_login(request, username, password):
 	user = authenticate(username = username, password = password)
@@ -18,6 +18,8 @@ def register(username, email, password):
 	newuser = models.AppUser(username = username, email = email)
 	newuser.set_password(password)
 	newuser.save()
+
+	ping.firebase_create_user(newuser)
 
 	return newuser
 

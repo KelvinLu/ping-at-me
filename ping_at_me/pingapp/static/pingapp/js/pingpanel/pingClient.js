@@ -1,5 +1,5 @@
 (function(){
-    var app = angular.module('pingClient', []);
+    var app = angular.module('pingClient', ['firebase']);
 
     app.directive('pingOutbox', function(){
         return {
@@ -10,11 +10,49 @@
         };
     });
 
-    app.controller('pingInboxController', ['firebaseService', function(firebaseService){
+    app.directive('pingInbox', function(){
+        return {
+            restrict: 'E',
+            templateUrl: '/static/pingapp/html/pinginbox.html',
+            controller: 'pingInboxController',
+            controllerAs: 'pingInboxCtrl',
+        };
+    });
+
+    app.controller('pingInboxController', ['pingInbox', function(pingInbox){
         var ctrl = this;
 
-        this.firebaseRef = firebaseService.firebaseRef;
-        this.initPromise = firebaseService.initPromise;
+        this.serviceData = pingInbox.serviceData;
+
+        this.selectedPing = null;
+
+        this.gmap = null;
+
+        this.initMap = function(){
+            ctrl.gmap = new GMaps({
+                div: '#pingInboxLocationMap',
+                lng: -121.754824,
+                lat: 38.537095,
+                disableDefaultUI: true,
+                zoomControl: true,
+                panControl: true,
+                streetViewControl: true,
+            });
+        };
+
+        this.selectPing = function(ping){
+            ctrl.selectedPing = ping;
+            ctrl.changeLocation(ping.longitude, ping.latitude);
+        };
+
+        this.changeLocation = function(longitude, latitude){
+            ctrl.gmap.removeMarkers();
+            ctrl.gmap.setCenter(latitude, longitude);
+            ctrl.gmap.addMarker({
+                lng: longitude,
+                lat: latitude,
+            });
+        };
     }]);
 
     app.controller('pingOutboxController', ['pingOutbox', 'friendsSearchService', 'locatorService', function(pingOutbox, friendsSearchService, locatorService){
@@ -27,11 +65,43 @@
             recipients: [],
         };
 
-        this.searchQuery = '';
-        this.currentLocationMapSrc = '';
+        this.pending = false;
 
-        this.displayLocation = function() {
-            map = new GMaps({
+        this.sendPingMessage = null;
+        this.sendPingSuccess = null;
+
+        this.friendsSearchServiceData = friendsSearchService.serviceData;
+
+        this.searchQuery = '';
+        this.page = 0;
+
+        this.gmap = null;
+
+        this.searchUsers = function(){
+            friendsSearchService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
+        this.prevUsers = function(){
+            ctrl.page = ((ctrl.page > 0) ? ctrl.page - 1 : ctrl.page);
+            friendsSearchService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
+        this.nextUsers = function(){
+            ctrl.page = ((ctrl.serviceData.remainingCount > 0) ? ctrl.page + 1 : ctrl.page);
+            friendsSearchService.searchUsers(ctrl.searchQuery, ctrl.page);
+        }
+
+        this.addRecipient = function(friend){
+            if (ctrl.outboxData.recipients.indexOf(friend) == -1) ctrl.outboxData.recipients.push(friend);
+        }
+
+        this.removeRecipient = function(friend){
+            recipients = ctrl.outboxData.recipients;
+            if ((index = recipients.indexOf(friend)) > -1) recipients.splice(index, 1);
+        }
+
+        this.displayLocation = function(){
+            ctrl.gmap = new GMaps({
                 div: '#currentLocationMap',
                 lng: ctrl.outboxData.longitude,
                 lat: ctrl.outboxData.latitude,
@@ -41,13 +111,13 @@
                 streetViewControl: true,
             });
 
-            map.addMarker({
+            ctrl.gmap.addMarker({
                 lng: ctrl.outboxData.longitude,
                 lat: ctrl.outboxData.latitude,
             });
         };
 
-        this.updateLocation = function() {
+        this.updateLocation = function(){
             locatorService.updateLocation(function(position){
                 ctrl.outboxData.longitude = position.coords.longitude;
                 ctrl.outboxData.latitude = position.coords.latitude;
@@ -57,8 +127,28 @@
             });
         };
 
-        this.sendPing = function() {
+        this.checkValid = function(){
+            return (ctrl.outboxData.longitude !== null) && (ctrl.outboxData.latitude !== null) && (ctrl.outboxData.recipients.length) && (!ctrl.pending);
+        };
 
+        this.sendPing = function(){
+            if (ctrl.checkValid()) {
+                ctrl.pending = true;
+                ctrl.sendPingSuccess = null;
+                pingOutbox.sendPing(ctrl.outboxData).
+                    success(function(data){
+                        ctrl.outboxData.message = '';
+                        ctrl.outboxData.recipients = [];
+                        ctrl.pending = false;
+                        ctrl.sendPingMessage = "ping sent!";
+                        ctrl.sendPingSuccess = true;
+                    }).
+                    error(function(data){
+                        ctrl.pending = false;
+                        ctrl.sendPingMessage = "could not send ping.";
+                        ctrl.sendPingSuccess = false;
+                    });
+            }
         };
     }]);
 
@@ -81,8 +171,13 @@
     app.factory('pingOutbox', ['$http', function($http){
         var serv = this;
 
-        this.sendPing = function(recipients, latitude, longitude, message) {
-
+        this.sendPing = function(outboxData) {
+            return $http.post('/api/ping/outbox', {
+                longitude: outboxData.longitude,
+                latitude: outboxData.latitude,
+                message: outboxData.message,
+                recipients: outboxData.recipients.map(function(friend){ return friend.id }),
+            });
         };
 
         return {
@@ -90,9 +185,20 @@
         };
     }]);
 
-    app.factory('pingInbox', ['firebaseService', function(firebaseService){
-        return {
+    app.factory('pingInbox', ['$firebase', 'firebaseService', function($firebase, firebaseService){
+        var serv = this;
 
+        this.serviceData = {
+            inbox: [],
+        };
+
+        firebaseService.initPromise.then(function(){            
+            inboxRefSync = $firebase(firebaseService.firebaseRef.child('pingInbox/' + firebaseService.userId.toString()));
+            serv.serviceData.inbox = inboxRefSync.$asArray();
+        });
+
+        return {
+            serviceData: this.serviceData,
         };
     }]);
 
@@ -101,6 +207,7 @@
 
         this.service = {
             'firebaseRef': null,
+            'userId': null,
             'initPromise': null,
         };
 
@@ -117,6 +224,7 @@
                     function(response){
                         firebaseUrl = response[0].data.url;
                         firebaseToken = response[1].data.token;
+                        serv.service.userId = response[1].data.userId;
                         firebaseRef = new Firebase(firebaseUrl);
                         firebaseRef.authWithCustomToken(firebaseToken, function(error, authData){
                             if (error) {
@@ -144,8 +252,9 @@
     app.factory('friendsSearchService', ['$http', function($http){
         var serv = this;
 
-        var serviceData = {
+        this.serviceData = {
             searchResults: [],
+            remainingCount: null,
         };
 
         this.searchUsers = function(query, page){
@@ -153,7 +262,8 @@
                 params: {q: query, page: page},
             }).
                 success(function(data){
-                    serviceData.searchResults = data.users;
+                    serv.serviceData.searchResults = data.users;
+                    serv.serviceData.remainingCount = data.remaining_count;
                 }).
                 error(function(data){
                     alert('Couldn\'t search!');
@@ -162,6 +272,7 @@
 
         return {
             searchUsers: this.searchUsers,
+            serviceData: this.serviceData,
         };
     }]);
 })();

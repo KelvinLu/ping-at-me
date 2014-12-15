@@ -1,4 +1,4 @@
-<div ng-show="requestsListCtrl.serviceData.visible" id="requests-list" class="listings">
+<div ng-show="requestsListCtrl.serviceData.visible" id="requests-list" class="no-highlight listings">
 	<div class="border-top-white">
 		<small><strong>send a friend request</strong></small>
 		<div class="row collapse">
@@ -16,7 +16,7 @@
 			<a ng-click="requestsListCtrl.prevSearchUsers()">previous page</a>
 		</small>
 		<br/>
-		<div ng-repeat="user in requestsListCtrl.serviceData.searchResults">
+		<div ng-repeat="user in requestsListCtrl.serviceData.searchResults" class="name-tag">
 			<small>{$ user.username $}</small>
 			<a ng-click="requestsListCtrl.sendRequest(user)" class="option"><i class="fa fa-plus"></i></a>
 		</div>
@@ -33,7 +33,7 @@
 			<a ng-click="requestsListCtrl.prevUsers()">previous page</a>
 		</small>
 		<br/>
-		<div ng-repeat="request in requestsListCtrl.serviceData.requests">
+		<div ng-repeat="request in requestsListCtrl.serviceData.requests" class="name-tag">
 			<small>{$ request.username $}</small>
 			<a ng-click="requestsListCtrl.denyRequest(request)" class="option"><i class="fa fa-times"></i></a>
 			<a ng-click="requestsListCtrl.acceptRequest(request)" class="option"><i class="fa fa-check"></i></a>
