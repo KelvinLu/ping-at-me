@@ -35,7 +35,7 @@
 
             <div ng-repeat="friend in pingOutboxCtrl.friendsSearchServiceData.searchResults" class="name-tag">
                 <small>{$ friend.username $}</small>
-                <a ng-click="pingOutboxCtrl.addRecipient(friend)" class="option"><i class="fa fa-arrow-right"></i></a>
+                <a ng-click="pingOutboxCtrl.addRecipient(friend)" class="option white-text-anchor"><i class="fa fa-arrow-right"></i></a>
             </div>
 
             <small ng-show="pingOutboxCtrl.friendsSearchServiceData.remainingCount">
@@ -59,7 +59,7 @@
             <br/>
             <div ng-repeat="friend in pingOutboxCtrl.outboxData.recipients" class="name-tag">
                 <small>{$ friend.username $}</small>
-                <a ng-click="pingOutboxCtrl.removeRecipient(friend)" class="option"><i class="fa fa-times"></i></a>
+                <a ng-click="pingOutboxCtrl.removeRecipient(friend)" class="option white-text-anchor"><i class="fa fa-times"></i></a>
             </div>
           </div>
           <div ng-hide="pingOutboxCtrl.outboxData.recipients.length">
@@ -80,7 +80,7 @@
 
   <div class="subsection">
     <button class="tiny button" ng-click="pingOutboxCtrl.sendPing()" ng-class="{disabled: !pingOutboxCtrl.checkValid()}">send ping</button>
-    <i class="fa fa-fw fa-spinner fa-spin" ng-show="pingOutboxCtrl.pending"></i>
+    <i class="fa fa-fw fa-fa-circle-o-notch fa-spin" ng-show="pingOutboxCtrl.pending"></i>
     <i class="fa fa-fw fa-check" ng-show="pingOutboxCtrl.sendPingSuccess !== null && pingOutboxCtrl.sendPingSuccess"></i>
     <i class="fa fa-fw fa-exclamation" ng-show="pingOutboxCtrl.sendPingSuccess !== null && !pingOutboxCtrl.sendPingSuccess"></i>
     <small ng-show="pingOutboxCtrl.sendPingSuccess !== null">{$ pingOutboxCtrl.sendPingMessage $}</small>

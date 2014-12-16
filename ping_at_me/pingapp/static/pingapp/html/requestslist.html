@@ -18,7 +18,7 @@
 		<br/>
 		<div ng-repeat="user in requestsListCtrl.serviceData.searchResults" class="name-tag">
 			<small>{$ user.username $}</small>
-			<a ng-click="requestsListCtrl.sendRequest(user)" class="option"><i class="fa fa-plus"></i></a>
+			<a ng-click="requestsListCtrl.sendRequest(user)" class="option white-text-anchor"><i class="fa fa-plus"></i></a>
 		</div>
 		<small ng-show="requestsListCtrl.serviceData.searchRemainingCount">
 			<a ng-click="requestsListCtrl.nextSearchUsers()">next page</a><br/>
@@ -35,8 +35,8 @@
 		<br/>
 		<div ng-repeat="request in requestsListCtrl.serviceData.requests" class="name-tag">
 			<small>{$ request.username $}</small>
-			<a ng-click="requestsListCtrl.denyRequest(request)" class="option"><i class="fa fa-times"></i></a>
-			<a ng-click="requestsListCtrl.acceptRequest(request)" class="option"><i class="fa fa-check"></i></a>
+			<a ng-click="requestsListCtrl.denyRequest(request)" class="option white-text-anchor"><i class="fa fa-times"></i></a>
+			<a ng-click="requestsListCtrl.acceptRequest(request)" class="option white-text-anchor"><i class="fa fa-check"></i></a>
 		</div>
 		<small ng-show="requestsListCtrl.serviceData.requestsRemainingCount">
 			<a ng-click="requestsListCtrl.nextUsers()">next page</a><br/>

@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',    # For development
     'djangular',
     'rest_framework',
     'pingapp',
@@ -90,3 +91,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Security
+
+os.environ['HTTPS'] = 'on'
+os.environ['wsgi.url_scheme'] = 'https'
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

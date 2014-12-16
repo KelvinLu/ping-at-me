@@ -17,7 +17,7 @@
 
         <div ng-repeat="friend in friendsListCtrl.serviceData.friends" class="name-tag">
             <small>{$ friend.username $}</small>
-            <a ng-click="friendsListCtrl.removeFriend(friend)" class="option"><i class="fa fa-times"></i></a>
+            <a ng-click="friendsListCtrl.removeFriend(friend)" class="option white-text-anchor"><i class="fa fa-times"></i></a>
         </div>
 
         <small ng-show="friendsListCtrl.serviceData.remainingCount">

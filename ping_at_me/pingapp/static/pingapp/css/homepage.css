@@ -49,6 +49,7 @@ div#goToRegister:hover {
 }
 
 div.transparentBox {
+	margin: 0.2em;
 	padding: 0.2em;
 	background-color: rgba(0, 0, 0, 0.5);
 }
