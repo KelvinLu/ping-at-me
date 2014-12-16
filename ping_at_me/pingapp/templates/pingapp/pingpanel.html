@@ -32,14 +32,16 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="column medium-8">
-      <ping-inbox></ping-inbox>
+  <section class="fullvertical">
+    <div class="row">
+      <div class="column medium-8">
+        <ping-inbox></ping-inbox>
+      </div>
+      <div class="column medium-4">
+        <ping-outbox></ping-outbox>
+      </div>
     </div>
-    <div class="column medium-4">
-      <ping-outbox></ping-outbox>
-    </div>
-  </div>
+  </section>
 {% endblock %}
 
 {% block body_js %}
