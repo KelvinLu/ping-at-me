@@ -1,9 +1,9 @@
-div#toolbar-container {
-	padding-left: 0;
-	padding-right: 0;
+span#title {
+	padding: 0.2em;
 }
 
-ul#toolbar-buttons {
+span#toolbar-buttons {
+	float: right;
 	text-align: right;
 }
 
@@ -16,18 +16,20 @@ ul#toolbar-buttons {
 	user-select: none;	
 }
 
-div.listings {
-	position: absolute;
-	top: 0px;
-	right: 0px;
+div#pingCardContainerWrapper {
+	height: 15em;
 
-	width: 100%;
+	overflow: auto;
+	overflow-x: hidden;
+}
 
-	padding: 1em;
+div#pingCardContainerWrapper::-webkit-scrollbar {
+    width: 0.2em;
+    background-color: #175275;
+}
 
-	background-color: black;
-
-	z-index: 1;
+div#pingCardContainerWrapper::-webkit-scrollbar-thumb {
+    background-color: white;
 }
 
 a.option {

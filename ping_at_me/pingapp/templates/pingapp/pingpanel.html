@@ -16,13 +16,11 @@
 {% endblock %}
 
 {% block header %}
-  <div class="row header-row">
-    <div class="column medium-3">
-      <h5>ping@me</h5>
-    </div>
-    <div id="toolbar-container" class="column medium-offset-6 medium-3">
-      <header-toolbar></header-toolbar>
-    </div>
+  <div class="row header-row no-highlight">
+    <span id="title">
+      ping@me
+    </span>
+    <header-toolbar></header-toolbar>
   </div>
 
   <div class="row header-row">
@@ -35,7 +33,7 @@
 
 {% block content %}
   <div class="row">
-    <div ng-controller="pingInboxController as pingInboxCtrl" class="column medium-8">
+    <div class="column medium-8">
       <ping-inbox></ping-inbox>
     </div>
     <div class="column medium-4">

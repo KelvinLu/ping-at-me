@@ -12,9 +12,12 @@
         </div>
         <div class="column small-6">
           <div class="double-list-column">
+            <i class="fa fa-fw fa-clock-o"></i>
             <strong>{$ pingInboxCtrl.selectedPing.timestamp * 1000 | date:'medium' $}</strong></br>
+            <i class="fa fa-fw fa-user"></i>
             <strong>{$ pingInboxCtrl.selectedPing.sender.username $}</strong></br>
             <div ng-show="pingInboxCtrl.selectedPing.message">
+              <i class="fa fa-fw fa-comment"></i>
               <span>{$ pingInboxCtrl.selectedPing.message $}</span>
             </div>
           </div>
@@ -22,7 +25,7 @@
     </div>
   </div>
 
-  <div class="subsection">
+  <div id="pingCardContainerWrapper" class="subsection">
     <div id="pingCardContainer">
       <div ng-repeat="ping in pingInboxCtrl.inboxData.inbox.slice().reverse()" class="pingCardWrapper">
         <div ng-mouseover="pingInboxCtrl.selectPing(ping)" class="pingCard">
