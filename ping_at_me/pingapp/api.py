@@ -15,13 +15,9 @@ from ping_at_me import config
 
 
 class AuthLogin(View):
-	def get(self, request):
-		return HttpResponse('OK', status = 200)
-
 	def post(self, request):
 		username = request.POST.get('username', '')
 		password = request.POST.get('password', '')
-
 		if username and password and users.user_login(request, username, password):
 			return HttpResponse(json.dumps({'authenticated': True}), content_type='application/json', status = 200)
 

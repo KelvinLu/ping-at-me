@@ -37,7 +37,7 @@ div#iconBox {
 div#goToRegister {
 	position: absolute;
 	left: 0;
-	bottom: 4em;
+	bottom: 6em;
 
 	width: 100%;
 
@@ -48,7 +48,14 @@ div#goToRegister:hover {
 	color: black;
 }
 
+div.transparentBox {
+	padding: 0.2em;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
 section.fullvertical {
+	position: relative;
+
 	height: 100vh;
 	width: 100%;
 
