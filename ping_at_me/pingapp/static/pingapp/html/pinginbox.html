@@ -2,26 +2,26 @@
   <span>ping inbox</span>
 
   <div class="subsection" ng-class="{invisible: pingInboxCtrl.selectedPing == null}">
-    <div class="row collapse">
-        <div class="column small-6">
-          <div class="double-list-column">
-            <div class="map-container">
-              <div ng-init="pingInboxCtrl.initMap()" id="pingInboxLocationMap" class="map"></div>
-            </div>
+    <div class="row">
+      <div class="column small-6">
+        <div class="double-list-column">
+          <div class="map-container">
+            <div ng-init="pingInboxCtrl.initMap()" id="pingInboxLocationMap" class="map"></div>
           </div>
         </div>
-        <div class="column small-6">
-          <div class="double-list-column">
-            <i class="fa fa-fw fa-clock-o"></i>
-            <strong>{$ pingInboxCtrl.selectedPing.timestamp * 1000 | date:'medium' $}</strong></br>
-            <i class="fa fa-fw fa-user"></i>
-            <strong>{$ pingInboxCtrl.selectedPing.sender.username $}</strong></br>
-            <div ng-show="pingInboxCtrl.selectedPing.message">
-              <i class="fa fa-fw fa-comment"></i>
-              <span>{$ pingInboxCtrl.selectedPing.message $}</span>
-            </div>
+      </div>
+      <div class="column small-6">
+        <div class="double-list-column">
+          <i class="fa fa-fw fa-clock-o"></i>
+          <strong>{$ pingInboxCtrl.selectedPing.timestamp * 1000 | date:'medium' $}</strong></br>
+          <i class="fa fa-fw fa-user"></i>
+          <strong>{$ pingInboxCtrl.selectedPing.sender.username $}</strong></br>
+          <div ng-show="pingInboxCtrl.selectedPing.message">
+            <i class="fa fa-fw fa-comment"></i>
+            <span>{$ pingInboxCtrl.selectedPing.message $}</span>
           </div>
         </div>
+      </div>
     </div>
   </div>
 
