@@ -19,7 +19,7 @@ def register(username, email, password):
 	newuser.set_password(password)
 	newuser.save()
 
-	ping.firebase_create_user(newuser)
+	ping.create_user(newuser)
 
 	return newuser
 

@@ -3,11 +3,38 @@ div#madeat {
 	opacity: 0.5;
 }
 
-section.fullvertical {
-	min-height: 100%;
+div#backgroundMap {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	height: 100vh;
+	width: 100%;
+
+	z-index: -1;
 }
 
-div#goToBottom {
+div#backgroundFilter {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	height: 100%;
+	width: 100%;
+
+	background-color: black;
+	opacity: 0.5;
+
+	z-index: -1;
+}
+
+div#iconBox {
+	margin-top: 2em;
+	border: 5px dashed white;
+	padding: 2em;
+}
+
+div#goToRegister {
 	position: absolute;
 	left: 0;
 	bottom: 4em;
@@ -15,6 +42,17 @@ div#goToBottom {
 	width: 100%;
 
 	text-align: center;
+}
+
+div#goToRegister:hover {
+	color: black;
+}
+
+section.fullvertical {
+	height: 100vh;
+	width: 100%;
+
+	padding-top: 6em;
 }
 
 small.error {

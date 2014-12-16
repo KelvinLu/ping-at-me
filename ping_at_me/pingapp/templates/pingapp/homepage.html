@@ -35,13 +35,25 @@
       </div>
     </div>
 
-    <div id="goToBottom">
+    <div class="row">
+      <div class="column medium-4 medium-offset-4">
+        <div id="iconBox" class="text-center">
+          <i class="fa fa-fw fa-5x fa-map-marker"></i> 
+          <i class="fa fa-fw fa-5x fa-users"></i>
+          </br>
+          <i class="fa fa-fw fa-5x fa-comment"></i> 
+          <i class="fa fa-fw fa-5x fa-envelope"></i>
+        </div>
+      </div>
+    </div>    
+
+    <div id="goToRegister">
       <small>new around here?</small><br/>
       <i class="fa fa-angle-double-down fa-5x"></i>
     </div>
   </section>
 
-  <section id="bottom" class="fullvertical">
+  <section id="register" class="fullvertical">
     <div class="row full">
       <div class="column medium-6">
         <h3>location</h3>
@@ -52,7 +64,16 @@
         <register-form></register-form>
       </div>
     </div>
+    <div class="row top-padded text-center">
+      <h5>the Rube Goldberg way of saying</h5>
+      <h3>"where you at?"</h3>
+    </div>
   </section>
+
+  <div id="backgroundMap">
+  </div>
+  <div id="backgroundFilter">
+  </div>
 {% endblock %}
 
 {% block body_js %}

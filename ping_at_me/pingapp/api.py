@@ -51,6 +51,7 @@ class Register(View):
 			
 			return HttpResponse(json.dumps({'success': True}), content_type='application/json', status = 200)
 		else:
+			print register_form.errors
 			return HttpResponse(json.dumps({'errors': register_form.errors}), content_type='application/json', status = 400)
 
 

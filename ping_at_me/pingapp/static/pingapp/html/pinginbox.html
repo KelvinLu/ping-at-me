@@ -25,8 +25,8 @@
   <div class="subsection">
     <div id="pingCardContainer">
       <div ng-repeat="ping in pingInboxCtrl.inboxData.inbox.slice().reverse()" class="pingCardWrapper">
-        <div class="pingCard">
-          <div ng-click="pingInboxCtrl.selectPing(ping)">
+        <div ng-mouseover="pingInboxCtrl.selectPing(ping)" class="pingCard">
+          <div>
             <small>{$ ping.timestamp * 1000 | date:'medium' $}</small></br>
             <small>{$ ping.sender.username $}</small>
             <small ng-show="ping.message"><i class="fa fa-fw fa-comment"></i></small>

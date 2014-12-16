@@ -102,3 +102,9 @@ div.pingCard {
 	padding: 0.2em;
 	width: 100%;
 }
+
+div.pingCard:hover {
+	background-color: #2B6689;
+	padding: 0.2em;
+	width: 100%;
+}

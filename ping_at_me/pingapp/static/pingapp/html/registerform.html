@@ -1,7 +1,7 @@
 <div>
   <form name="registerForm" novalidate>
 
-    <input class="error" ng-model="registerCtrl.username" name="username" ng-model-options="{ debounce: 500 }" type="text" placeholder="username" ng-minlength="5" ng-maxlength="30" ng-pattern="/^\w+$/" validate-username-available></input>
+    <input class="error" ng-model="registerCtrl.username" name="username" ng-model-options="{ debounce: 500 }" type="text" placeholder="username" ng-minlength="5" ng-maxlength="18" ng-pattern="/^\w+$/" validate-username-available></input>
     <small class="error" ng-show="registerForm.username.$error.minlength">Username too short.</small>
     <small class="error" ng-show="registerForm.username.$error.maxlength">Username too long.</small>
     <small class="error" ng-show="registerForm.username.$error.pattern">Letters, numbers, and underscores only please!</small>

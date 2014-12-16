@@ -36,5 +36,13 @@ div#header {
 }
 
 div#content {
-	height: 100%;
+	min-height: 100%;
+}
+
+div.text-center {
+	text-align: center;
+}
+
+div.top-padded {
+	padding-top: 4em;
 }
