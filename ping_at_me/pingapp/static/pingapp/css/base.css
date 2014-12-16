@@ -1,6 +1,4 @@
 body {
-	padding-top: 6em;
-
 	background-color: #012235;
 	color: white;
 
@@ -52,5 +50,9 @@ div#header {
 }
 
 div#content {
+	position: relative;
+	top: 0;
+	left: 0;
+
 	min-height: 100%;
 }
