@@ -17,7 +17,7 @@ span#toolbar-buttons {
 }
 
 div#pingCardContainerWrapper {
-	height: 15em;
+	height: 40vh;
 
 	overflow: auto;
 	overflow-x: hidden;

@@ -80,7 +80,7 @@
 
   <div class="subsection">
     <button class="tiny button" ng-click="pingOutboxCtrl.sendPing()" ng-class="{disabled: !pingOutboxCtrl.checkValid()}">send ping</button>
-    <i class="fa fa-fw fa-fa-circle-o-notch fa-spin" ng-show="pingOutboxCtrl.pending"></i>
+    <i class="fa fa-fw fa-circle-o-notch fa-spin" ng-show="pingOutboxCtrl.pending"></i>
     <i class="fa fa-fw fa-check" ng-show="pingOutboxCtrl.sendPingSuccess !== null && pingOutboxCtrl.sendPingSuccess"></i>
     <i class="fa fa-fw fa-exclamation" ng-show="pingOutboxCtrl.sendPingSuccess !== null && !pingOutboxCtrl.sendPingSuccess"></i>
     <small ng-show="pingOutboxCtrl.sendPingSuccess !== null">{$ pingOutboxCtrl.sendPingMessage $}</small>
